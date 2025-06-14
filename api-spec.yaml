@@ -220,7 +220,7 @@ components:
       type: object
       title: UpdateBusinessSchema
       description: |-
-        This is the schema class which defines the requst schema
+        This is the schema class which defines the request schema
         required to update an existing business record.
     
     ValidationError:
