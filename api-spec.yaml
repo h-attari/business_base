@@ -182,7 +182,7 @@ components:
         - employee_size
       title: CreateBusinessSchema
       description: |-
-        This is the schema class which defines the requst schema
+        This is the schema class which defines the request schema
         required to create a new business record.
     
     HTTPValidationError:
