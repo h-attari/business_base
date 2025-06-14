@@ -1,0 +1,246 @@
+openapi: 3.1.0
+
+info:
+  title: Business Base
+  version: 0.1.0
+  description: |-
+    This is the API specification for the Business Base application.
+    It provides endpoints to create, read, update, and delete business records.
+
+x-tag-names:
+  business: &BUSINESS_TAG "Business"
+
+tags:
+  - name: *BUSINESS_TAG
+    description: Endpoints for managing business records
+
+paths:
+  /business:
+    post:
+      tags:
+        - *BUSINESS_TAG
+      summary: Create Business
+      description: Create API to create a new business record.
+      operationId: create_business_business_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBusinessSchema'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+        - *BUSINESS_TAG
+      summary: Search Business
+      description: Get API to return an existing business record or list of business records.
+      operationId: search_business_business_get
+      parameters:
+        - name: business_name
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Business Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/BusinessSchema'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/BusinessSchema'
+                title: Response Search Business Business Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  
+  /business/{business_id}:
+    put:
+      tags:
+        - *BUSINESS_TAG
+      summary: Update Business
+      description: Update API to update an existing business record.
+      operationId: update_business_business__business_id__put
+      parameters:
+        - name: business_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Business Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBusinessSchema'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - *BUSINESS_TAG
+      summary: Delete Business
+      description: Delete API to delete an existing business record.
+      operationId: delete_business_business__business_id__delete
+      parameters:
+        - name: business_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Business Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+
+components:
+  schemas:
+    BusinessSchema:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        address:
+          type: string
+          title: Address
+        owner:
+          type: string
+          title: Owner
+        employee_size:
+          type: integer
+          title: Employee Size
+      type: object
+      required:
+        - id
+        - name
+        - address
+        - owner
+        - employee_size
+      title: BusinessSchema
+      description: |-
+        This is the schema class which defines the response class
+        required to return a proper structure response for the apis.
+    
+    CreateBusinessSchema:
+      properties:
+        business_name:
+          type: string
+          title: Business Name
+        address:
+          type: string
+          title: Address
+        business_owner:
+          type: string
+          title: Business Owner
+        employee_size:
+          type: integer
+          title: Employee Size
+      type: object
+      required:
+        - business_name
+        - address
+        - business_owner
+        - employee_size
+      title: CreateBusinessSchema
+      description: |-
+        This is the schema class which defines the request schema
+        required to create a new business record.
+    
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    
+    UpdateBusinessSchema:
+      properties:
+        business_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Business Name
+        address:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Address
+        business_owner:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Business Owner
+        employee_size:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Employee Size
+      type: object
+      title: UpdateBusinessSchema
+      description: |-
+        This is the schema class which defines the request schema
+        required to update an existing business record.
+    
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
